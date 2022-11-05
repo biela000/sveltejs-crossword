@@ -1,0 +1,26 @@
+<script lang="ts">
+    import BoxStatus from "../../types/BoxStatus";
+    import LetterBox from "./LetterBox.svelte";
+    import Word from "../../types/Word";
+
+    export let maxLength: number;
+    export let word: Word;
+
+    const placeholderLength = maxLength - word.word.length;
+</script>
+
+<div class="flex gap-1.5 justify-center">
+    {#each word.word as letter, index (index)}
+        <LetterBox
+            letter="{letter}"
+            status="{BoxStatus.EMPTY}"
+            keywordIndex="{word.wordToKeywordIndexes[index]}"
+        />
+    {/each}
+    {#each [...Array(placeholderLength).keys()] as _}
+        <LetterBox
+            letter="{null}"
+            status="{BoxStatus.PLACEHOLDING}"
+        />
+    {/each}
+</div>
