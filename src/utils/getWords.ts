@@ -36,15 +36,19 @@ const fetchWordsForKeyword = async (kw: string) => {
 
         const matchingIndexes = { };
 
-        word.word.split('').forEach((wordLetter, wordIndex) => {
+        let matchCount: number = 0;
+
+        for (let wIndex = 0; wIndex < word.word.length; wIndex++) {
             for (let kwIndex = 0; kwIndex < kwCopy.length; kwIndex++) {
-                if (wordLetter === kwCopy[kwIndex]) {
+                if (word.word[wIndex] === kwCopy[kwIndex]) {
                     kwCopy = replaceAt(kwCopy, kwIndex, '0');
-                    matchingIndexes[wordIndex] = kwIndex;
+                    matchingIndexes[wIndex] = kwIndex;
+                    matchCount++;
                     break;
                 }
             }
-        })
+           if (matchCount > 1) break;
+        }
 
         word.wordToKeywordIndexes = { ...matchingIndexes };
         words.push(word);

@@ -5,6 +5,7 @@
 
     export let maxLength: number;
     export let word: Word;
+    export let y: number;
 
     const placeholderLength = maxLength - word.word.length;
 </script>
@@ -15,6 +16,8 @@
             letter="{letter}"
             status="{BoxStatus.EMPTY}"
             keywordIndex="{word.wordToKeywordIndexes[index]}"
+            x="{index}"
+            y="{y}"
         />
     {/each}
     {#each [...Array(placeholderLength).keys()] as _}
