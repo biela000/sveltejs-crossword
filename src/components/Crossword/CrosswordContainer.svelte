@@ -30,6 +30,10 @@
             letterBox.select();
         }
     });
+
+    const posClickChangeHandler = (e) => {
+        currentPos = [e.detail.payload[0], e.detail.payload[1]];
+    };
 </script>
 
 <section class="flex gap-5 flex-col">
@@ -38,7 +42,7 @@
     {:then [keyword, words]}
         <div class="flex gap-1.5 flex-col">
             {#each words as word, index (index)}
-                <Word maxLength="{keyword.word.length}" word="{word}" y="{index}" />
+                <Word maxLength="{keyword.word.length}" word="{word}" y="{index}" on:message={posClickChangeHandler} />
             {/each}
         </div>
         <DefinitionList definitions="{words}" />

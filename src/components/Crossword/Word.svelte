@@ -18,6 +18,7 @@
             keywordIndex="{word.wordToKeywordIndexes[index]}"
             x="{index}"
             y="{y}"
+            on:message
         />
     {/each}
     {#each [...Array(placeholderLength).keys()] as _}
