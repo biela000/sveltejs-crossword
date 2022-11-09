@@ -2,8 +2,11 @@
     import getWords from "../../utils/getWords";
     import Word from "./Word.svelte";
     import DefinitionList from "./DefinitionList.svelte";
+    import Keyword from "./Keyword.svelte";
+    import LoadingScreen from "../UI/LoadingScreen.svelte";
 
     let currentPos = [0, 0];
+    let enabledIndexes = [];
 
     const posKeyChangeHandler = (key: string, autoFilledPos?: [number, number]) => {
         const currentPosCopy = autoFilledPos || [...currentPos];
@@ -37,20 +40,27 @@
         }
     });
 
-    const posClickChangeHandler = (e) => {
-        currentPos = [e.detail.payload[0], e.detail.payload[1]];
+    const wordMessageHandler = (e) => {
+        if (e.detail.action === 'CLICK_CHANGE') {
+            currentPos = [e.detail.payload[0], e.detail.payload[1]];
+        } else if (e.detail.action === 'UNCOVER_KEYWORD_LETTERS') {
+            e.detail.payload.forEach((el: number) => {
+                enabledIndexes = [...enabledIndexes, el];
+            });
+        }
     };
 </script>
 
-<section class="flex gap-5 flex-col">
+<section class="flex gap-5 flex-col mt-5">
     {#await getWords()}
-        <h1>Fetching words</h1>
+        <LoadingScreen />
     {:then [keyword, words]}
         <div class="flex gap-1.5 flex-col">
             {#each words as word, index (index)}
-                <Word maxLength="{keyword.word.length}" word="{word}" y="{index}" on:message={posClickChangeHandler} />
+                <Word maxLength="{keyword.word.length}" word="{word}" y="{index}" on:message={wordMessageHandler} />
             {/each}
         </div>
+        <Keyword word="{keyword}" enabledIndexes="{enabledIndexes}" />
         <DefinitionList definitions="{words}" />
     {/await}
 </section>

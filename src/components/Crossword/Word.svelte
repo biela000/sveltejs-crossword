@@ -19,24 +19,28 @@
         const shouldUncover: boolean = Math.random() > 0.7;
         const status: BoxStatus = shouldUncover && automaticallyUncoveredCount < 3 ? BoxStatus.AUTO_FILLED : BoxStatus.EMPTY;
         if (status === BoxStatus.AUTO_FILLED) {
+            console.log(status);
             automaticallyUncoveredCount++;
             filledLetters[index] = word.word[index];
         }
         return status;
     };
 
+    const boxStatusArray: [BoxStatus] = [...Array(word.word.length).keys()].map((_, ind) => getWritableBoxStatus(ind));
+
     $: validateWord = () => {
-        if (filledLetters.join('') === word.word) {
-            console.log(filledLetters.join(''));
-        }
+        return filledLetters.join('') === word.word;
     };
+
+    $: if (validateWord()) {
+        dispatch('message', { action: 'UNCOVER_KEYWORD_LETTERS', payload: Object.values(word.wordToKeywordIndexes) });
+    }
 
     const messageHandler = (e) => {
         if (e.detail.action === 'CLICK_CHANGE') {
             dispatch('message', e.detail);
         } else if (e.detail.action === 'LETTER_CHANGE') {
             filledLetters[e.detail.payload.pos] = e.detail.payload.letter;
-            validateWord();
         }
     };
 </script>
@@ -45,7 +49,7 @@
     {#each word.word as letter, index (index)}
         <LetterBox
             letter="{letter}"
-            status="{getWritableBoxStatus(index)}"
+            status="{validateWord() ? BoxStatus.SUCCESSFULLY_FILLED : boxStatusArray[index]}"
             keywordIndex="{word.wordToKeywordIndexes[index]}"
             x="{index}"
             y="{y}"

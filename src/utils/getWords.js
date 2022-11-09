@@ -69,6 +69,7 @@ export default async () => {
         definition: keywordResponse.data.results.definition
     };
     const words = await fetchWordsForKeyword(keyword.word);
+    console.log('finished');
     return [keyword, words];
 };
 //# sourceMappingURL=getWords.js.map

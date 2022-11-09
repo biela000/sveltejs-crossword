@@ -82,6 +82,7 @@ export default async () => {
     };
 
     const words: [Word] = await fetchWordsForKeyword(keyword.word);
+    console.log('finished');
 
     return [keyword, words];
 };
