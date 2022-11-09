@@ -52,6 +52,7 @@ const fetchWordsForKeyword = async (kw: string) => {
 
         word.wordToKeywordIndexes = { ...matchingIndexes };
         words.push(word);
+        console.log(word);
     }
 
     return words as [Word];

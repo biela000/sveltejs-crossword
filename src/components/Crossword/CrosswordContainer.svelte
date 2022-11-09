@@ -5,9 +5,9 @@
 
     let currentPos = [0, 0];
 
-    document.body.addEventListener('keydown', e => {
-        const currentPosCopy = [...currentPos];
-        switch (e.key) {
+    const posKeyChangeHandler = (key: string, autoFilledPos?: [number, number]) => {
+        const currentPosCopy = autoFilledPos || [...currentPos];
+        switch (key) {
             case 'ArrowUp':
                 currentPosCopy[1]--;
                 break;
@@ -24,8 +24,14 @@
                 break;
         }
         const letterBox: HTMLInputElement = document.querySelector(`div[data-x="${currentPosCopy[0]}"][data-y="${currentPosCopy[1]}"] > input`);
+        if (letterBox && !letterBox.disabled) currentPos = [...currentPosCopy];
+        if (letterBox && letterBox.disabled) return posKeyChangeHandler(key, currentPosCopy);
+        return letterBox;
+    }
+
+    document.body.addEventListener('keydown', e => {
+        const letterBox = posKeyChangeHandler(e.key);
         if (letterBox) {
-            currentPos = [...currentPosCopy];
             letterBox.focus();
             letterBox.select();
         }

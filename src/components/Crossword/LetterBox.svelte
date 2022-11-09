@@ -32,11 +32,16 @@
     const clickHandler = () => {
         dispatch('message', { action: 'CLICK_CHANGE', payload: [x, y] });
     };
+
+    const isAutoFilled = status === BoxStatus.AUTO_FILLED;
+    let inputValue = status === BoxStatus.AUTO_FILLED ? letter : '';
+
+    $: dispatch('message', { action: 'LETTER_CHANGE', payload: { pos: x, letter: inputValue } })
 </script>
 
 <div class="{classList.join(' ')}" data-x="{x}" data-y="{y}">
     {#if status !== BoxStatus.PLACEHOLDING}
-        <input type="text" maxlength="1" name="letter" class="w-full bg-transparent text-center outline-none" on:click={clickHandler} />
+        <input type="text" maxlength="1" name="letter" class="w-full bg-transparent text-center outline-none" on:click={clickHandler} disabled={isAutoFilled} bind:value={inputValue} />
         {#if keywordIndex !== undefined}
             <div class="absolute right-1.5 bottom-0 text-xs text-gray-400">{keywordIndex}</div>
         {/if}

@@ -43,6 +43,7 @@ const fetchWordsForKeyword = async (kw) => {
         }
         word.wordToKeywordIndexes = Object.assign({}, matchingIndexes);
         words.push(word);
+        console.log(word);
     }
     return words;
 };
