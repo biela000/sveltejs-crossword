@@ -17,7 +17,7 @@
 
     const getWritableBoxStatus = (index) => {
         const shouldUncover: boolean = Math.random() > 0.7;
-        const status: BoxStatus = shouldUncover && !word.wordToKeywordIndexes[index] && automaticallyUncoveredCount < 3 ? BoxStatus.AUTO_FILLED : BoxStatus.EMPTY;
+        const status: BoxStatus = shouldUncover && word.wordToKeywordIndexes[index] === undefined && automaticallyUncoveredCount < 3 ? BoxStatus.AUTO_FILLED : BoxStatus.EMPTY;
         if (status === BoxStatus.AUTO_FILLED) {
             automaticallyUncoveredCount++;
             filledLetters[index] = word.word[index];
