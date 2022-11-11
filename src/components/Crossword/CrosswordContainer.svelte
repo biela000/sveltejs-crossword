@@ -8,7 +8,7 @@
     let currentPos = [0, 0];
     let enabledIndexes = [];
 
-    const posKeyChangeHandler = (key: string, autoFilledPos?: [number, number]) => {
+    const posKeyChangeHandler = (key: string, autoFilledPos?: [number, number], afterValidation?: boolean) => {
         const currentPosCopy = autoFilledPos || [...currentPos];
         switch (key) {
             case 'ArrowUp':
@@ -28,16 +28,21 @@
         }
         const letterBox: HTMLInputElement = document.querySelector(`div[data-x="${currentPosCopy[0]}"][data-y="${currentPosCopy[1]}"] > input`);
         if (letterBox && !letterBox.disabled) currentPos = [...currentPosCopy];
-        if (letterBox && letterBox.disabled) return posKeyChangeHandler(key, currentPosCopy);
+        const isInMaximumBounds = currentPosCopy[0] < 13 && currentPosCopy[1] < 13 && currentPosCopy[0] > -1 && currentPosCopy[1] > -1;
+        if ((!letterBox && isInMaximumBounds) || (letterBox && letterBox.disabled)) return posKeyChangeHandler(afterValidation ? 'ArrowRight' : key, currentPosCopy);
         return letterBox;
     }
 
-    document.body.addEventListener('keydown', e => {
-        const letterBox = posKeyChangeHandler(e.key);
+    const focusBox = (letterBox: HTMLInputElement) => {
         if (letterBox) {
             letterBox.focus();
             letterBox.select();
         }
+    };
+
+    document.body.addEventListener('keydown', e => {
+        const letterBox = posKeyChangeHandler(e.key);
+        focusBox(letterBox);
     });
 
     const wordMessageHandler = (e) => {
@@ -47,6 +52,11 @@
             e.detail.payload.forEach((el: number) => {
                 enabledIndexes = [...enabledIndexes, el];
             });
+            const letterBox: HTMLInputElement = posKeyChangeHandler('ArrowDown', [0, currentPos[1]], true);
+            focusBox(letterBox);
+        } else if (e.detail.action === 'LETTER_CHANGE') {
+            const letterBox: HTMLInputElement = posKeyChangeHandler('ArrowRight');
+            focusBox(letterBox);
         }
     };
 </script>

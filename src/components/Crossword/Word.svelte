@@ -36,11 +36,10 @@
     }
 
     const messageHandler = (e) => {
-        if (e.detail.action === 'CLICK_CHANGE') {
-            dispatch('message', e.detail);
-        } else if (e.detail.action === 'LETTER_CHANGE') {
+        if (e.detail.action === 'LETTER_CHANGE') {
             filledLetters[e.detail.payload.pos] = e.detail.payload.letter;
         }
+        dispatch('message', e.detail);
     };
 </script>
 
