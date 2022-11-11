@@ -2,9 +2,16 @@
     import LetterBox from "./LetterBox.svelte";
     import BoxStatus from "../../types/BoxStatus";
     import Word from "../../types/Word";
+    import {createEventDispatcher} from "svelte";
 
     export let word: Word;
     export let enabledIndexes: [number];
+
+    const dispatch = createEventDispatcher();
+
+    $: if (enabledIndexes.length === word.word.length) {
+        dispatch('message', { action: 'KEYWORD_COMPLETED' })
+    }
 </script>
 
 <div class="flex gap-1.5 justify-center">

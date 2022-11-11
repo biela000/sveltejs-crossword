@@ -46,17 +46,25 @@
     });
 
     const wordMessageHandler = (e) => {
-        if (e.detail.action === 'CLICK_CHANGE') {
-            currentPos = [e.detail.payload[0], e.detail.payload[1]];
-        } else if (e.detail.action === 'UNCOVER_KEYWORD_LETTERS') {
-            e.detail.payload.forEach((el: number) => {
-                enabledIndexes = [...enabledIndexes, el];
-            });
-            const letterBox: HTMLInputElement = posKeyChangeHandler('ArrowDown', [0, currentPos[1]], true);
-            focusBox(letterBox);
-        } else if (e.detail.action === 'LETTER_CHANGE') {
-            const letterBox: HTMLInputElement = posKeyChangeHandler('ArrowRight');
-            focusBox(letterBox);
+        switch (e.detail.action) {
+            case 'CLICK_CHANGE':
+                currentPos = [e.detail.payload[0], e.detail.payload[1]];
+                break;
+            case 'UNCOVER_KEYWORD_LETTERS':
+                e.detail.payload.forEach((el: number) => {
+                    enabledIndexes = [...enabledIndexes, el];
+                });
+                const letterBox: HTMLInputElement = posKeyChangeHandler('ArrowDown', [0, currentPos[1]], true);
+                focusBox(letterBox);
+                break;
+            case 'LETTER_CHANGE':
+                if (e.detail.payload.letter) {
+                    const lb: HTMLInputElement = posKeyChangeHandler('ArrowRight');
+                    focusBox(lb);
+                }
+                break;
+            default:
+                break;
         }
     };
 </script>
@@ -70,7 +78,7 @@
                 <Word maxLength="{keyword.word.length}" word="{word}" y="{index}" on:message={wordMessageHandler} />
             {/each}
         </div>
-        <Keyword word="{keyword}" enabledIndexes="{enabledIndexes}" />
+        <Keyword word="{keyword}" enabledIndexes="{enabledIndexes}" on:message />
         <DefinitionList definitions="{words}" />
     {/await}
 </section>

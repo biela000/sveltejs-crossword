@@ -29,6 +29,7 @@ const fetchWordsForKeyword = async (kw: string) => {
     while (kwCopy.split('').filter(ltr => ltr === '0').length < kw.length) {
         wordOptions.params.letterPattern = `(?=\\b\\w*[${kwCopy}]\\w*\\b)(?=^\\S*$)`;
         const response = await axios.request(wordOptions);
+        if (response.data.word.includes('0')) continue;
         const word: Word = {
             word: response.data.word,
             definition: response.data.results[0].definition
@@ -82,7 +83,6 @@ export default async () => {
     };
 
     const words: [Word] = await fetchWordsForKeyword(keyword.word);
-    console.log('finished');
 
     return [keyword, words];
 };
