@@ -7,6 +7,7 @@
     export let keywordIndex: number;
     export let x: number;
     export let y: number;
+    export let clickUncoveredLetter: string;
 
     const background =
         status === BoxStatus.PLACEHOLDING ? "bg-green-600" :
@@ -36,9 +37,13 @@
     const isAutoFilled = status === BoxStatus.AUTO_FILLED;
     let inputValue = status === BoxStatus.AUTO_FILLED ? letter : '';
 
+    $: if (letter === clickUncoveredLetter) {
+      inputValue = letter;
+    }
+
     $: dispatch('message', { action: 'LETTER_CHANGE', payload: { pos: x, letter: inputValue } });
 
-    $: additionalStyle = status === BoxStatus.SUCCESSFULLY_FILLED || status === BoxStatus.KEYWORD_FILLED ? 'background-color: rgb(34 197 94)' : null;
+    $: additionalStyle = status === BoxStatus.SUCCESSFULLY_FILLED || status === BoxStatus.KEYWORD_FILLED ? 'background-color: rgb(34 197 94)' : additionalStyle;
 </script>
 
 <div class="{classList.join(' ')}" style="{additionalStyle}" data-x="{x}" data-y="{y}">

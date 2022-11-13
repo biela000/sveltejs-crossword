@@ -8,7 +8,7 @@
     const dispatch = createEventDispatcher();
 
     const closeModal = () => {
-        dispatch('message', { action: 'CLOSE_MODAL' })
+        dispatch('message', { action: 'CLOSE_MODAL' });
     };
 </script>
 

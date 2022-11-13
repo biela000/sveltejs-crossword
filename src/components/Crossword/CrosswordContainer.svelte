@@ -4,6 +4,9 @@
     import DefinitionList from "./DefinitionList.svelte";
     import Keyword from "./Keyword.svelte";
     import LoadingScreen from "../UI/LoadingScreen.svelte";
+    import UncoverableLetters from "./UncoverableLetters.svelte";
+
+    let letterToUncover: string = '';
 
     let currentPos = [0, 0];
     let enabledIndexes = [];
@@ -22,6 +25,11 @@
                 break;
             case 'ArrowRight':
                 currentPosCopy[0]++;
+                break;
+            case 'Enter':
+                afterValidation = true;
+                currentPosCopy[0] = 0;
+                currentPosCopy[1]++;
                 break;
             default:
                 break;
@@ -67,6 +75,10 @@
                 break;
         }
     };
+
+    const uncoverAllOccurrences = (e) => {
+      letterToUncover = e.detail.payload.letter;
+    };
 </script>
 
 <section class="flex gap-5 flex-col mt-5">
@@ -75,10 +87,11 @@
     {:then [keyword, words]}
         <div class="flex gap-1.5 flex-col">
             {#each words as word, index (index)}
-                <Word maxLength="{keyword.word.length}" word="{word}" y="{index}" on:message={wordMessageHandler} />
+                <Word maxLength="{keyword.word.length}" word="{word}" y="{index}" on:message={wordMessageHandler} uLetter="{letterToUncover}" />
             {/each}
         </div>
         <Keyword word="{keyword}" enabledIndexes="{enabledIndexes}" on:message />
         <DefinitionList definitions="{words}" />
+        <UncoverableLetters on:message={uncoverAllOccurrences} />
     {/await}
 </section>

@@ -7,6 +7,7 @@
     export let maxLength: number;
     export let word: Word;
     export let y: number;
+    export let uLetter: string;
 
     const placeholderLength = maxLength - word.word.length;
     let automaticallyUncoveredCount: number = 0;
@@ -28,7 +29,7 @@
     const boxStatusArray: [BoxStatus] = [...Array(word.word.length).keys()].map((_, ind) => getWritableBoxStatus(ind));
 
     $: validateWord = () => {
-        return filledLetters.join('') === word.word;
+        return filledLetters.join('').toLowerCase() === word.word;
     };
 
     $: if (validateWord()) {
@@ -52,6 +53,7 @@
             x="{index}"
             y="{y}"
             on:message="{messageHandler}"
+            clickUncoveredLetter="{uLetter}"
         />
     {/each}
     {#each [...Array(placeholderLength).keys()] as _}
